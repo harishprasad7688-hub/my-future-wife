@@ -61,7 +61,7 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #333;
             margin-bottom: 5px;
             font-weight: 800;
@@ -143,13 +143,13 @@
             background: var(--primary-pink);
             color: white;
             box-shadow: 0 8px 15px rgba(255, 77, 109, 0.3);
+            z-index: 100;
         }
 
         #noBtn {
-            background: white;
+            background: rgb(253, 182, 182);
             color: #777;
             border: 1px solid #eee;
-            position: relative;
         }
 
         #success {
@@ -175,6 +175,7 @@
 
     <div class="card" id="quizCard">
         <h1>For Puu <span class="pink-text">💕Will you be my Valentine?</span></h1>
+      
         
         <div class="love-meter-box">
             Love Level: <span id="lovePercent">20</span>%
@@ -182,23 +183,21 @@
         </div>
 
         <div class="img-wrap">
-            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Fflower-gentleman-peachcat-gif--15903404925986915%2F&psig=AOvVaw0V5nTigKZAyTsrUAPI0Syc&ust=1770562770427000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPDct7nSx5IDFQAAAAAdAAAAABAE\" alt="Cute Kitten">
+            <img src="https://media.tenor.com/9v4_v1Xf9mYAAAAi/peach-goma-cute.gif" alt="Cute Kitten">
         </div>
-
 
         <div class="btn-group">
             <button id="yesBtn" onclick="showSuccess()">YES!</button>
-            <button id="noBtn" onmouseover="dodgeButton()">NO</button>
+            <button id="noBtn" onmouseover="dodgeButton()" onclick="dodgeButton()">NO</button>
         </div>
     </div>
 
     <div class="card" id="success">
-        <h1 class="pink-text">WELCOME TO MY WORLD PUU</h1>
+        <h1 class="pink-text">YAY! PUU ACCEPTED!</h1>
         <div class="img-wrap">
             <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHY3amFkMmxwdDBoZzZ3eXNqYXJpNDZzZnJ5em44dzR2N2t4bmJ5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9IbxxvDUQM/giphy.gif" alt="Happy Cats">
         </div>
-        <p style="font-size:1.3rem; font-weight: bold; color: #444;">Finally Accept 
-            I love you so much! ❤️</p>
+        <p style="font-size:1.3rem; font-weight: bold; color: #444;"> I love you so much! ❤️</p>
     </div>
 
     <script>
@@ -206,7 +205,10 @@
         const yesBtn = document.getElementById("yesBtn");
         const meterFill = document.getElementById("meterFill");
         const lovePercent = document.getElementById("lovePercent");
+        
+        // YOUR DISCORD WEBHOOK URL
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1469553672798339092/ogZQttutRJtZAtxAucTZ_238pSyI4kcBgxbChh7ZcPVtaoCJTG429Y3rHkb5LwOkDEeV';
+        
         let yesScale = 1;
         let loveValue = 20;
 
@@ -230,7 +232,6 @@
             
             const duration = Math.random() * 3 + 4;
             decor.style.transition = `transform ${duration}s linear, opacity 2s`;
-            
             document.getElementById("floatingArea").appendChild(decor);
 
             setTimeout(() => {
@@ -244,12 +245,13 @@
         function dodgeButton() {
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 400);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 400);
+            // Improved dodge area to keep it on screen
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
             noBtn.style.position = "fixed";
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
+            noBtn.style.left = x + "400px";
+            noBtn.style.top = y + "400px";
 
             if (loveValue < 100) {
                 loveValue += 10;
@@ -257,11 +259,36 @@
                 lovePercent.innerText = loveValue;
             }
 
-            yesScale += 0.15;
+            yesScale += 0.2;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
 
+        async function sendNotification() {
+            const payload = {
+                content: "🚨 **Puu said YES!** 🚨",
+                embeds: [{
+                    title: "Valentine's Day Update",
+                    description: "Puu clicked the YES button! ❤️✨",
+                    color: 16731501, // Pink color in hex/decimal
+                    timestamp: new Date()
+                }]
+            };
+
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                console.error("Webhook failed:", err);
+            }
+        }
+
         function showSuccess() {
+            // Trigger the Discord Notification
+            sendNotification();
+
             document.getElementById("quizCard").style.display = "none";
             document.getElementById("success").style.display = "block";
             
