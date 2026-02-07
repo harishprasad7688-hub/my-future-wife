@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> My Future Wife ❤️</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffebee;
+            overflow: hidden;
+        }
+        h1 { color: #d32f2f; text-align: center; }
+        .buttons { position: relative; width: 300px; height: 100px; margin-top: 20px; }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #yes-btn { background-color: #4caf50; color: white; }
+        #no-btn {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+            left: 160px;
+        }
+        .hidden { display: none; }
+        #success-msg { text-align: center; color: #d32f2f; }
+    </style>
+</head>
+<body>
+
+    <div id="quiz">
+        <h1>Will you be my Valentine? ❤️</h1>
+        <div class="buttons">
+            <button id="yes-btn" onclick="sayYes()">YES</button>
+            <button id="no-btn">NO</button>
+        </div>
+    </div>
+
+    <div id="success-msg" class="hidden">
+        <h1>YAY! Best decision ever! 🥰</h1>
+        <p>I love you!</p>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const webhookUrl = 'https://discord.com/api/webhooks/1469553672798339092/ogZQttutRJtZAtxAucTZ_238pSyI4kcBgxbChh7ZcPVtaoCJTG429Y3rHkb5LwOkDEeV'; // PASTE YOUR LINK HERE
+
+        // The "Dodge" Logic
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton);
+
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        // The "Success" Logic + Notification
+        function sayYes() {
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+
+            // This sends the notification to your Discord!
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: "🚨 SHE SAID YES! 🚨" })
+            });
+        }
+    </script>
+</body>
+</html>
