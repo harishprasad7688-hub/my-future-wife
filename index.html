@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Valentine ❤️</title>
     <style>
-        /* Animated Heart Background */
+        /* 1. Animated Pink Gradient Background */
         body {
             margin: 0;
             padding: 0;
-            background-color: #fce4ec;
+            /* Creates a soft, pulsing pink glow */
+            background: radial-gradient(circle, #fff0f5 0%, #fce4ec 100%);
             font-family: 'Arial', sans-serif;
             overflow: hidden;
             display: flex;
@@ -25,32 +26,50 @@
             width: 100%;
             height: 100%;
             z-index: -1;
+            overflow: hidden;
         }
 
+        /* 2. Floating Heart Styles */
         .floating-heart {
             position: absolute;
-            color: rgba(233, 30, 99, 0.2);
-            font-size: 20px;
-            animation: move-hearts 10s infinite linear;
+            bottom: -50px;
+            color: #ff80ab;
+            user-select: none;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatUp linear infinite;
         }
 
-        @keyframes move-hearts {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
-        /* Main Card */
+        /* 3. Main Card Styling */
         .card {
             background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
             text-align: center;
             width: 85%;
             max-width: 400px;
             border: 2px solid white;
+            position: relative;
+            z-index: 10;
         }
 
         h1 { color: #d81b60; font-size: 28px; margin-bottom: 10px; }
@@ -71,14 +90,26 @@
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #yesBtn { background-color: #e91e63; color: white; box-shadow: 0 4px 10px rgba(233,30,99,0.3); }
-        #noBtn { background-color: #bdbdbd; color: white; position: relative; }
+        button:active { transform: scale(0.95); }
+
+        #yesBtn { 
+            background-color: #e91e63; 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(233,30,99,0.3); 
+        }
+
+        #noBtn { 
+            background-color: #bdbdbd; 
+            color: white; 
+            position: relative; 
+            transition: all 0.2s ease;
+        }
 
         #success { display: none; }
-        img { width: 100%; max-width: 250px; border-radius: 20px; margin-top: 20px; }
+        img { width: 100%; max-width: 200px; border-radius: 20px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -88,7 +119,7 @@
     <div class="card" id="quizCard">
         <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueW81bm9pZ3E0eXpueXpueXpueXpueXpueXpueXpueXpueCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c76IJLufpNwSULPk2m/giphy.gif" alt="Cute Cat">
         <h1>Manu, <br>will you be my Valentine? ❤️</h1>
-        <p class="subtitle">Choose wisely... the "No" button is shy!</p>
+        <p class="subtitle">I promise it'll be fun!</p>
         <div class="btn-group">
             <button id="yesBtn" onclick="showSuccess()">YES</button>
             <button id="noBtn" onmouseover="dodge()" onclick="dodge()">NO</button>
@@ -102,51 +133,72 @@
     </div>
 
     <script>
-        // 1. ADD BACKGROUND HEARTS
+        // --- 1. CONFIGURATION ---
+        const WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
         const bgContainer = document.getElementById('bgHearts');
-        for (let i = 0; i < 20; i++) {
+
+        // --- 2. BACKGROUND HEART GENERATOR ---
+        function createHeart(isBurst = false) {
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
-            heart.innerText = '❤️';
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+            
+            // Random Horizontal Position
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDelay = Math.random() * 10 + 's';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            
+            // Random Size
+            const size = Math.random() * 20 + 10;
+            heart.style.fontSize = size + 'px';
+            
+            // Random Duration (5-12 seconds)
+            const duration = isBurst ? (Math.random() * 3 + 2) : (Math.random() * 7 + 5);
+            heart.style.animationDuration = duration + 's';
+            
+            // Random Opacity
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+
             bgContainer.appendChild(heart);
+
+            // Cleanup
+            setTimeout(() => { heart.remove(); }, duration * 1000);
         }
 
-        // 2. DISCORD NOTIFICATION (Paste your link here)
-        const WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+        // Start continuous background hearts
+        setInterval(createHeart, 400);
 
-        // 3. THE DODGE FUNCTION
+        // --- 3. THE DODGE FUNCTION ---
         function dodge() {
             const noBtn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            // Ensure button doesn't go off screen
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
         }
 
-        // 4. THE SUCCESS FUNCTION
+        // --- 4. THE SUCCESS FUNCTION ---
         function showSuccess() {
             document.getElementById('quizCard').style.display = 'none';
             document.getElementById('success').style.display = 'block';
             
-            // Create a bigger burst of hearts
-            for(let i=0; i<30; i++) {
-                const h = document.createElement('div');
-                h.className = 'floating-heart';
-                h.innerText = '💖';
-                h.style.left = Math.random() * 100 + 'vw';
-                h.style.animationDuration = '3s';
-                document.body.appendChild(h);
+            // Create a "Burst" effect of hearts
+            for(let i=0; i<40; i++) {
+                setTimeout(() => createHeart(true), i * 50);
             }
 
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: "🌹 **MANU SAID YES!** 🌹" })
-            });
+            // Send to Discord
+            if (WEBHOOK_URL !== 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
+                fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: "🌹 **MANU SAID YES!** 🌹" })
+                }).catch(err => console.log("Webhook error:", err));
+            }
         }
     </script>
 </body>
