@@ -3,82 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> My Future Wife ❤️</title>
+    <title>A Special Surprise ❤️</title>
     <style>
+        /* This makes it look like the video */
         body {
+            margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #ffebee;
+            background-color: #ffdde1;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             overflow: hidden;
+            text-align: center;
         }
-        h1 { color: #d32f2f; text-align: center; }
-        .buttons { position: relative; width: 300px; height: 100px; margin-top: 20px; }
+
+        h1 { color: #d63384; font-size: 2.5rem; margin-bottom: 30px; }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            width: 100%;
+            justify-content: center;
+            height: 100px;
+        }
+
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 10px;
+            padding: 15px 35px;
+            font-size: 1.5rem;
             border: none;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
-        #yes-btn { background-color: #4caf50; color: white; }
+
+        #yes-btn { background-color: #ff4d6d; color: white; }
+        #yes-btn:hover { transform: scale(1.1); }
+
         #no-btn {
-            background-color: #f44336;
+            background-color: #888;
             color: white;
-            position: absolute;
-            left: 160px;
+            position: absolute; /* Needed for the jumping effect */
         }
-        .hidden { display: none; }
-        #success-msg { text-align: center; color: #d32f2f; }
+
+        #success-screen { display: none; }
+        .heart { position: absolute; color: #ff4d6d; font-size: 20px; animation: float 3s infinite linear; opacity: 0; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="quiz">
-        <h1>Will you be my Valentine? ❤️</h1>
-        <div class="buttons">
-            <button id="yes-btn" onclick="sayYes()">YES</button>
-            <button id="no-btn">NO</button>
+    <div id="main-screen">
+        <h1>Will you be my Valentine? 🌹</h1>
+        <div class="btn-container">
+            <button id="yes-btn" onclick="celebrate()">YES!</button>
+            <button id="no-btn" onmouseover="moveNo()" ontouchstart="moveNo()">NO</button>
         </div>
     </div>
 
-    <div id="success-msg" class="hidden">
-        <h1>YAY! Best decision ever! 🥰</h1>
-        <p>I love you!</p>
+    <div id="success-screen">
+        <h1>I KNEW IT! ❤️ See you soon! 😘</h1>
+        <div style="font-size: 100px;">🥰</div>
     </div>
 
     <script>
-        const noBtn = document.getElementById('no-btn');
-        const webhookUrl = 'https://discord.com/api/webhooks/1469553672798339092/ogZQttutRJtZAtxAucTZ_238pSyI4kcBgxbChh7ZcPVtaoCJTG429Y3rHkb5LwOkDEeV'; // PASTE YOUR LINK HERE
+        // 1. YOUR SECRET HOTLINE (Paste your Discord URL here)
+        const MY_WEBHOOK = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
 
-        // The "Dodge" Logic
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton);
-
-        function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+        // 2. THE JUMPING BUTTON LOGIC
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            // Calculates random spot on screen
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.style.position = 'fixed'; // Makes it jump over everything
         }
 
-        // The "Success" Logic + Notification
-        function sayYes() {
-            document.getElementById('quiz').classList.add('hidden');
-            document.getElementById('success-msg').classList.remove('hidden');
+        // 3. THE "YES" ACTION
+        function celebrate() {
+            // Hide the question, show the love
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('success-screen').style.display = 'block';
 
-            // This sends the notification to your Discord!
-            fetch(webhookUrl, {
+            // Create floating hearts
+            for(let i=0; i<30; i++) {
+                createHeart();
+            }
+
+            // SEND THE NOTIFICATION TO YOUR PHONE
+            fetch(MY_WEBHOOK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: "🚨 SHE SAID YES! 🚨" })
+                body: JSON.stringify({
+                    content: "🔥 **SHE SAID YES!** Prepare the flowers! 🌹"
+                })
             });
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
         }
     </script>
 </body>
