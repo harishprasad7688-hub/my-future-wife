@@ -4,55 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will you be my Valentine? ❤️</title>
-    <style>
-        body {
-            background-color: #fce4ec; /* The soft pink background from the video */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
+   <style>
+    /* Global body styling */
+    body {
+        background-color: #fce4ec; /* Soft pink background */
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* Card styling */
+    .card {
+        background: white;
+        padding: 50px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        z-index: 1;
+    }
+
+    h1 {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .pink-text {
+        color: #e91e63;
+    }
+
+    .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    /* Button group */
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        height: 60px;
+        position: relative;
+    }
+
+    button {
+        padding: 12px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    /* Animated Heart Background */
+    .bg-hearts {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .floating-heart {
+        position: absolute;
+        color: rgba(233, 30, 99, 0.2);
+        font-size: 20px;
+        animation: move-hearts 10s infinite linear;
+    }
+
+    @keyframes move-hearts {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
         }
-        .card {
-            background: white;
-            padding: 50px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
+        50% {
+            opacity: 0.8;
         }
-        h1 { font-size: 32px; color: #333; margin-bottom: 10px; }
-        .pink-text { color: #e91e63; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            height: 60px;
-            position: relative;
+        100% {
+            transform: translateY(-10vh) rotate(360deg);
+            opacity: 0;
         }
-        button {
-            padding: 12px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-        #yesBtn { background-color: #e91e63; color: white; z-index: 10; }
-        #noBtn { background-color: #f5f5f5; color: #333; position: relative; }
-        #success { display: none; }
-        img { width: 280px; border-radius: 15px; margin-top: 20px; }
-    </style>
+    }
+
+    /* Image styling */
+    img {
+        width: 280px;
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+</style>
+
 </head>
 <body>
 
     <div class="card" id="quizCard">
-        <h1>Manu, <br>will you be my Valentine? <span class="pink-text">💕</span></h1>
+        <h1>Puu<br>will you be my Valentine? <span class="pink-text">💕</span></h1>
         <p class="subtitle">Choose wisely. (The "No" button is... shy.)</p>
+        <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Fflower-gentleman-peachcat-gif--15903404925986915%2F&psig=AOvVaw2z9XGaL-7LEyc4CloXPECz&ust=1770553606906000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCKj9lqywx5IDFQAAAAAdAAAAABAE" alt="Cute Hug">
         
         <div class="btn-group">
             <button id="yesBtn" onclick="showSuccess()">YES</button>
@@ -63,7 +126,7 @@
     <div class="card" id="success">
         <h1 class="pink-text">YAY!!! 💕</h1>
         <p style="font-size: 18px; color: #333;">Best decision ever 🥳</p>
-        <img src="https://media.tenor.com/S6pI4XjX77YAAAAi/milk-and-mocha-hug.gif" alt="Cute Hug">
+        <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Ftenor.com%2Fview%2Fcouple-kiss-gif-7410017&psig=AOvVaw10hJrZ8h-yJdIoTAZG57dN&ust=1770553206335000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLjtseuux5IDFQAAAAAdAAAAABBk" alt="Cute Hug">
         <p style="font-weight: bold; margin-top: 20px; font-size: 20px;">I love you ❤️</p>
     </div>
 
@@ -72,7 +135,7 @@
         const phrases = ["Please no 🥺", "Don't do this to me", "Think again! 🤔", "This could be a mistake!"];
         
         // IMPORTANT: Put your Webhook URL here
-        const WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1469553672798339092/ogZQttutRJtZAtxAucTZ_238pSyI4kcBgxbChh7ZcPVtaoCJTG429Y3rHkb5LwOkDEeV';
 
         function dodgeButton() {
             // Change text randomly like the video
